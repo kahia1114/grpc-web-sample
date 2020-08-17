@@ -1,0 +1,26 @@
+{
+  "name": "grpc-web-sample",
+  "version": "1.0.0",
+  "description": "gRPC-Web sample",
+  "scripts": {
+    "build": "run-p build:sv build:cl",
+    "build:sv": "cd server && go build -o build/hello main.go",
+    "build:cl": "cd client && npm run build",
+    "prebuild:sv": "protoc --go_out=plugins=grpc:server/grpcpb proto/*.proto",
+    "prebuild:cl": "protoc --grpc-web_out=import_style=typescript,mode=grpcwebtext:client/grpcpb --js_out=import_style=commonjs:client/grpcpb -I=proto proto/*.proto",
+    "clean": "npm-run-all clean:*",
+    "clean:sv": "rimraf server/build",
+    "clean:sv-grcpb": "rimraf server/grpcpb/*",
+    "clean:cl": "rimraf client/build",
+    "clean:cl-grcpb": "rimraf client/grpcpb/*",
+    "serve": "cd server && go run main.go",
+    "open": "open client/index.html",
+    "setup": "npm ci && cd client && npm ci"
+  },
+  "author": "Yukimasa Imai",
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
+  }
+}

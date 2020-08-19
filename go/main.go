@@ -19,12 +19,12 @@ func (s *helloService) SayHello(ctx context.Context, req *grpcpb.HelloRequest) (
 }
 
 func main() {
-	grpcServer := grpc.NewServer()
+	http.Handle("/static/", http.FileServer(http.Dir("../")))
 
+	grpcServer := grpc.NewServer()
 	grpcpb.RegisterHelloServiceServer(grpcServer, &helloService{})
 
 	wrapServer := grpcweb.WrapServer(grpcServer, grpcweb.WithOriginFunc(func(s string) bool { return true }))
-
 	http.Handle("/", wrapServer)
 
 	err := http.ListenAndServe(":8080", nil)

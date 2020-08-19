@@ -85,7 +85,7 @@ message HelloRequest { string name = 1; }
 message HelloReply { string message = 1; }
 ```
 
-### クライアント画面（client/index.html）
+### クライアント画面（static/index.html）
 
 クライアント画面用の HTML です。
 
@@ -111,7 +111,7 @@ message HelloReply { string message = 1; }
 </html>
 ```
 
-### クライアント処理（client/index.ts）
+### クライアント処理（ts/index.ts）
 
 画面で送信ボタンをクリックした時の gRPC 呼び出し処理です。
 
@@ -139,7 +139,7 @@ const requestHello = async () => {
 htmlInputElement("sendBtn").addEventListener("click", requestHello);
 ```
 
-### サーバ処理（server/main.go）
+### サーバ処理（go/main.go）
 
 gRPC 呼び出しを受け付けるサーバ処理（SayHello）の実装です。
 
@@ -167,12 +167,12 @@ func (s *helloService) SayHello(ctx context.Context, req *grpcpb.HelloRequest) (
 }
 
 func main() {
-  grpcServer := grpc.NewServer()
+  http.Handle("/static/", http.FileServer(http.Dir("../")))
 
+  grpcServer := grpc.NewServer()
   grpcpb.RegisterHelloServiceServer(grpcServer, &helloService{})
 
-  wrapServer := grpcweb.WrapServer(grpcServer, grpcweb.WithOriginFunc(func(s string) bool { return true }))
-
+  wrapServer := grpcweb.WrapServer(grpcServer)
   http.Handle("/", wrapServer)
 
   err := http.ListenAndServe(":8080", nil)

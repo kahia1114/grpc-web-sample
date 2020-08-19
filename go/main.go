@@ -24,7 +24,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	grpcpb.RegisterHelloServiceServer(grpcServer, &helloService{})
 
-	wrapServer := grpcweb.WrapServer(grpcServer, grpcweb.WithOriginFunc(func(s string) bool { return true }))
+	wrapServer := grpcweb.WrapServer(grpcServer)
 	http.Handle("/", wrapServer)
 
 	err := http.ListenAndServe(":8080", nil)

@@ -1,9 +1,9 @@
 module.exports = {
   mode: "development",
-  entry: "./index.ts",
+  entry: "./main.ts",
   output: {
     path: __dirname + "/../static/build",
-    filename: "index.js",
+    filename: "bundle.js",
   },
   module: {
     rules: [
